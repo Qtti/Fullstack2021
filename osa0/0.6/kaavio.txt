@@ -1,0 +1,7 @@
+note over selain:
+Selain luo listaan uuden muistiinpanon
+end note
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+note over palvelin:
+Palvelin tallentaa lähetetyn datan(uuden muistiinpanon)
+end note
