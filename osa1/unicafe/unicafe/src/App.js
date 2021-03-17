@@ -11,18 +11,25 @@ const Statistics = ({good, neutral, bad}) => {
   const sum = good * 1 + neutral * 0 + bad * -1
   const avarage = sum / total
   const positive = good / total * 100
-
-  return (
-  <div>
-    <h1>statistics</h1>
-    <p>good {total}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
-    <p>all {total}</p>
-    <p>avarage {avarage}</p>
-    <p>positive {positive} %</p>
-  </div>
-  )
+  
+  if (total === 0) {
+    return (
+      <div><p>No feedback given</p></div>
+    )
+  }
+  else {
+    return (
+      <div>
+        <h1>statistics</h1>
+        <p>good {good}</p>
+        <p>neutral {neutral}</p>
+        <p>bad {bad}</p>
+        <p>all {total}</p>
+        <p>avarage {avarage}</p>
+        <p>positive {positive} %</p>
+      </div>
+    )
+  }
 }
 
 
