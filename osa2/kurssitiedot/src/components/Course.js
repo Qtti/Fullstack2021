@@ -1,0 +1,44 @@
+import React from 'react'
+
+const Header = (props) => { 
+    return (
+      <>
+        <h1>{props.name}</h1>
+      </>
+)}
+  
+const Part = (props) => {
+    return (
+        <>
+            <p>
+                {props.part} {props.exercises}
+            </p>
+        </>
+)}
+  
+const Content = (props) => {
+    return (
+        <>
+        <Part part={props.parts[0].name} exercises = {props.parts[0].exercises}/>
+        <Part part={props.parts[1].name} exercises = {props.parts[1].exercises}/>
+        <Part part={props.parts[2].name} exercises = {props.parts[2].exercises}/>
+        </>
+)}
+
+const Total = (props) => {
+let sum = props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises
+return (
+    <>
+    <p>Number of exercises {sum}</p>
+    </>
+)}
+
+const Course = ({course}) => (
+    <div>
+        <Header name={course.name}/>
+        <Content parts={course.parts}/>
+        <Total parts={course.parts}/>
+    </div>
+)
+
+export default Course
