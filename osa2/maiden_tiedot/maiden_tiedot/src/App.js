@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Countries = ({countries}) => {
+const Countries = ({countries, onChangeFunction}) => {
+  console.log(onChangeFunction)
   if(countries.length === 1)
   {
     return (
@@ -34,7 +35,7 @@ const Countries = ({countries}) => {
     return (
       <ul>
         {countries.map(country => 
-          <li key={country.alpha3Code}>{country.name}</li>
+          <li key={country.alpha3Code}>{country.name} <button onClick={onChangeFunction()} value = {country.name} key={country.alpha3Code}>Show</button></li>
         )}
       </ul>
     )
@@ -67,7 +68,7 @@ const App = () => {
     <div>
       find countries<input value={filterValue} onChange={handleFilterChange}></input>
       <div>
-        <Countries countries={countriesToShow}></Countries>
+        <Countries countries={countriesToShow} onChangeFunction={() => handleFilterChange}></Countries>
       </div>
     </div>
     )
