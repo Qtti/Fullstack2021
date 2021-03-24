@@ -2,6 +2,29 @@ import React, { useState, useEffect } from 'react'
 //import axios from 'axios'
 import personsService from './services/persons'
 
+const Notification = ({ message }) => {
+  const notificationStyle = {
+    color: 'green',
+    fontSize: 20,
+    border: 3,
+    borderStyle: "solid",
+    borderColor: "green",
+    backgroundColor: "lightgrey",
+    borderRadius: 5,
+    padding: 5,
+    margin: 10
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
 
 const Filter = (props) => {
 
@@ -52,6 +75,14 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterValue, setFilterValue ] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+
+  const setNotification = (message) => {
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+  }
 
   useEffect(() => {
       personsService
@@ -86,6 +117,7 @@ const App = () => {
             setPersons(persons.filter(n => n.id !== person.id).concat(returnedPerson))
             setNewName('')  
             setNewNumber('')  
+            setNotification(`Person ${newName} updated`)
         })
       }
     }
@@ -97,6 +129,7 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')  
           setNewNumber('')  
+          setNotification(`Person ${newName} added`)
       })
     }
   }
@@ -112,6 +145,7 @@ const App = () => {
         .remove(id)
         .then(response => {       
           setPersons(persons.filter(n => n.id !== id))
+          setNotification(`Person ${name} deleted`)
         })
     }
   }
@@ -139,6 +173,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter value={filterValue} handleChange={() => handleFilterChange}></Filter>
       <h3>Add a new</h3>
       <PersonForm  newName={newName} addPersonFunction={() => addPerson} 
