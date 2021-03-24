@@ -35,12 +35,12 @@ const PersonForm = (props) => {
   </div>)
 }
 
-const Persons = ({personsToShow}) => {
+const Persons = ({personsToShow, deletePersonFunction}) => {
   return (
     <div>
       <ul>
       {personsToShow.map(person => 
-        <li key={person.name}>{person.name} {person.number}</li>
+        <li key={person.id}>{person.name} {person.number}<button name={person.name} value={person.id} onClick={deletePersonFunction()}>delete</button></li>
       )}
       </ul>
     </div>
@@ -57,31 +57,40 @@ const App = () => {
       personsService
         .getAll()
         .then(response => {
-          //console.log(response)
           setPersons(response)
         })
   }, [])
-  //console.log('render', persons.length, 'notes')
 
   const addPerson = (event) => {
     event.preventDefault()
+    const person = persons.find(person => person.name === newName)
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
 
     console.log("newName:", newName)
     console.log("persons:", persons)
-    console.log(persons.some(person => person.name === newName))
+    console.log("person:", person)
 
     if(persons.some(person => person.name === newName))
     {
-      console.log("duplicate value")    
-      alert(`${newName} is already added to phonebook`)
+      // update
+      if (window.confirm(`Update ${person.name}?`)) 
+      {
+        console.log("update")    
+        
+        personsService
+          .update(person.id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.filter(n => n.id !== person.id).concat(returnedPerson))
+            setNewName('')  
+            setNewNumber('')  
+        })
+      }
     }
     else
     {
-      const personObject = {
-        name: newName,
-        number: newNumber
-      }
-
       personsService
         .create(personObject)
         .then(returnedPerson => {
@@ -89,6 +98,21 @@ const App = () => {
           setNewName('')  
           setNewNumber('')  
       })
+    }
+  }
+
+  const deletePerson = (event) => {
+    const id = parseInt(event.target.value)
+    const name = event.target.name
+
+    if (window.confirm(`Delete ${name}?`)) {
+      console.log("id:", id)
+      //console.log(event.target.value)
+      personsService
+        .remove(id)
+        .then(response => {       
+          setPersons(persons.filter(n => n.id !== id))
+        })
     }
   }
 
@@ -105,8 +129,11 @@ const App = () => {
   const handleFilterChange = (event) => {
     console.log(event.target.value)
     setFilterValue(event.target.value)
+
+    console.log(persons.find(person => person.name === event.target.value))
   }
 
+  
   const personsToShow = (!filterValue || 0 === filterValue.length) ? persons : persons.filter(person => person.name.toLowerCase().search(filterValue.toLowerCase()) > -1)
 
   return (
@@ -120,7 +147,7 @@ const App = () => {
                 handleNumberChangeFunction={() => handleNumberChange}>
       </PersonForm>
       <h2>Numbers</h2>
-        <Persons personsToShow={personsToShow}></Persons>
+        <Persons personsToShow={personsToShow} deletePersonFunction={() => deletePerson} ></Persons>
     </div>
   )
 
