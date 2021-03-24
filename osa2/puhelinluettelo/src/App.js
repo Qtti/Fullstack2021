@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 //import axios from 'axios'
 import personsService from './services/persons'
 
-const Notification = ({ message }) => {
+const Notification = ({message, type}) => {
   const notificationStyle = {
     color: 'green',
     fontSize: 20,
@@ -13,6 +13,11 @@ const Notification = ({ message }) => {
     borderRadius: 5,
     padding: 5,
     margin: 10
+  }
+
+  if(type === 'error'){
+    notificationStyle.color = 'red'
+    notificationStyle.borderColor = 'red'
   }
 
   if (message === null) {
@@ -76,11 +81,14 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterValue, setFilterValue ] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState(null)
 
-  const setNotification = (message) => {
+  const setNotification = (message, type=null) => {
     setNotificationMessage(message)
+    setNotificationType(type)
     setTimeout(() => {
       setNotificationMessage(null)
+      setNotificationType(null)
     }, 5000)
   }
 
@@ -118,6 +126,9 @@ const App = () => {
             setNewName('')  
             setNewNumber('')  
             setNotification(`Person ${newName} updated`)
+          .catch(error => {
+            setNotification(`the person ${newName} was already deleted from server`, "error")  
+            })
         })
       }
     }
@@ -130,6 +141,9 @@ const App = () => {
           setNewName('')  
           setNewNumber('')  
           setNotification(`Person ${newName} added`)
+        .catch(error => {
+            setNotification(`Error creating ${newName}`, "error")  
+          })
       })
     }
   }
@@ -146,6 +160,9 @@ const App = () => {
         .then(response => {       
           setPersons(persons.filter(n => n.id !== id))
           setNotification(`Person ${name} deleted`)
+        })
+        .catch(error => {
+          setNotification(`the person ${name} was already deleted from server`, "error")   
         })
     }
   }
@@ -173,7 +190,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} type={notificationType}/>
       <Filter value={filterValue} handleChange={() => handleFilterChange}></Filter>
       <h3>Add a new</h3>
       <PersonForm  newName={newName} addPersonFunction={() => addPerson} 
