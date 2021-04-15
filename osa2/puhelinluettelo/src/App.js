@@ -136,20 +136,17 @@ const App = () => {
     {
       personsService
         .create(personObject)
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-          setNewName('')  
-          setNewNumber('')  
-          setNotification(`Person ${newName} added`)
-        .catch(error => {
-            setNotification(`Error creating ${newName}`, "error")  
-          })
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')  
+            setNewNumber('')  
+            setNotification(`Person ${newName} added`)
       })
     }
   }
 
   const deletePerson = (event) => {
-    const id = parseInt(event.target.value)
+    const id = event.target.value
     const name = event.target.name
 
     if (window.confirm(`Delete ${name}?`)) {
@@ -157,9 +154,9 @@ const App = () => {
       //console.log(event.target.value)
       personsService
         .remove(id)
-        .then(response => {       
-          setPersons(persons.filter(n => n.id !== id))
-          setNotification(`Person ${name} deleted`)
+          .then(response => {       
+            setPersons(persons.filter(n => n.id !== id))
+            setNotification(`Person ${name} deleted`)
         })
         .catch(error => {
           setNotification(`the person ${name} was already deleted from server`, "error")   
