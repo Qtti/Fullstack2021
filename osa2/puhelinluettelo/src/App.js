@@ -126,10 +126,11 @@ const App = () => {
             setNewName('')  
             setNewNumber('')  
             setNotification(`Person ${newName} updated`)
+          })
           .catch(error => {
-            setNotification(`the person ${newName} was already deleted from server`, "error")  
+            setNotification(`the person ${newName}  was already deleted from server`, "error")  
             })
-        })
+
       }
     }
     else
@@ -141,7 +142,7 @@ const App = () => {
             setNewName('')  
             setNewNumber('')  
             setNotification(`Person ${newName} added`)
-      })
+        })
     }
   }
 
