@@ -143,6 +143,10 @@ const App = () => {
             setNewNumber('')  
             setNotification(`Person ${newName} added`)
         })
+        .catch(error => {
+          console.log(error.response.data)
+          setNotification(error.response.data.error , "error")  
+          })
     }
   }
 
