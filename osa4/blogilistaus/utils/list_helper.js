@@ -33,15 +33,36 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   const blogswriter = _.map(_.countBy(blogs, "author"), (val, key) => ({ author: key, blogs: val }))
 
-  const sort = blogswriter.sort(function (a, b) {
-    return a.blogs - b.blogs
-  })
-  let max = sort[sort.length - 1] ?? []
+  const sort = blogswriter.sort((a, b) => a.blogs - b.blogs)
+  const max = sort[sort.length - 1] ?? []
 
+  return max
+}
+
+const mostLikes = (blogs) => {
+  var sort =
+  _(blogs)
+    .groupBy('author')
+    .map((objs, key) => ({
+        'author': key,
+        'likes': _.sumBy(objs, 'likes') }))
+    .value()
+    .sort((a, b) => a.likes - b.likes)
+
+  let max = sort[sort.length - 1]
+
+  if(max) {
+    delete max._id
+    delete max.__v
+    delete max.url
+  }
+  else {
+    max = []
+  }
   return max
 }
 
   
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 }
