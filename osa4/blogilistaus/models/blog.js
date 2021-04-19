@@ -8,10 +8,9 @@ const blogSchema = mongoose.Schema({
     likes: Number
 })
 
-//const Blog = mongoose.model('Blog', blogSchema)
 
 const mongoUrl = config.MONGODB_URI
-//const mongoUrl = 'mongodb://localhost/bloglist'
+
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 blogSchema.set('toJSON', {
