@@ -108,6 +108,19 @@ describe('total likes', () => {
     .expect(400)
   })
 
+  test('delete one', async () => { 
+    let response = await api.get('/api/blogs')
+    const firstblog = response.body[0]
+
+    await api
+    .delete(`/api/blogs/${firstblog.id}`)
+    .expect(204)
+    
+    response = await api.get('/api/blogs')
+
+    expect(response.body).toHaveLength(initialList.length - 1)
+  })
+
   afterAll(() => {
     mongoose.connection.close()
   })
