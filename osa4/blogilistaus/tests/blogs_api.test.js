@@ -2,7 +2,9 @@ const supertest = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 
 
@@ -52,14 +54,14 @@ describe('total likes', () => {
     await Blog.insertMany(initialList)
   })
 
-  test('notes are returned as json', async () => {
+  test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
 
-  test('total notes', async () => {
+  test('total blogs', async () => {
       const response = await api.get('/api/blogs')
       expect(response.body).toHaveLength(initialList.length)
     })
@@ -143,9 +145,45 @@ describe('total likes', () => {
     .get(`/api/blogs/${firstblog.id}`)
     .expect(200)
     expect(response.body).toEqual(updateBlog)
+  })  
+
+  
+})
+
+describe('when there is initially one user at db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
   })
 
-  afterAll(() => {
-    mongoose.connection.close()
+  test('creation succeeds with a fresh username', async () => {
+    let response = await api.get('/api/users')
+    const usersAtStart = response.body
+    const newUser = {
+      username: 'jukkak',
+      name: 'jukka',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    response = await api.get('/api/users')
+    const usersAtEnd = response.body
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
   })
+})
+
+afterAll(() => {
+  mongoose.connection.close()
 })
