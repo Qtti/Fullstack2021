@@ -121,6 +121,30 @@ describe('total likes', () => {
     expect(response.body).toHaveLength(initialList.length - 1)
   })
 
+  test('Update', async () => { 
+    let response = await api.get('/api/blogs')
+    const firstblog = response.body[0]
+
+    const updateBlog = 
+    {
+        id: firstblog.id,
+        title: 'Updated',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5
+    }
+
+    await api
+    .put(`/api/blogs/${firstblog.id}`)
+    .send(updateBlog)
+    .expect(200)
+    
+    response = await api
+    .get(`/api/blogs/${firstblog.id}`)
+    .expect(200)
+    expect(response.body).toEqual(updateBlog)
+  })
+
   afterAll(() => {
     mongoose.connection.close()
   })
