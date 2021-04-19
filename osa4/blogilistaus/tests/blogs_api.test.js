@@ -43,13 +43,7 @@ const initialList = [
     likes: 2,
   }]
 
-  const oneBlog = 
-    {
-        title: 'Go To Statement Considered Harmful',
-        author: 'Edsger W. Dijkstra',
-        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 5,
-    }
+  
 
 describe('total likes', () => {
   beforeEach(async () => {
@@ -77,15 +71,28 @@ describe('total likes', () => {
       })
   })
 
-  test('add one', async () => { 
+  test('add one & likes 0 or greater', async () => { 
+    
+    const oneBlog = 
+    {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    }
+
     await api
     .post('/api/blogs')
     .send(oneBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
-
+    
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(initialList.length + 1)
+
+    const contents = response.body
+    contents.map(content => {
+      expect(content.likes).toBeGreaterThanOrEqual(0)
+    })
   })
 
   afterAll(() => {
