@@ -1,9 +1,10 @@
-const mongoose = require('mongoose')
 const supertest = require('supertest')
+const mongoose = require('mongoose')
 const app = require('../app')
+const api = supertest(app)
 const Blog = require('../models/blog')
 
-const api = supertest(app)
+
 
 const initialList = [
   {
@@ -93,6 +94,18 @@ describe('total likes', () => {
     contents.map(content => {
       expect(content.likes).toBeGreaterThanOrEqual(0)
     })
+  })
+
+  test('add one without title & url', async () => {
+    const oneBlog = 
+    {
+        author: 'Edsger W. Dijkstra',
+    }
+
+    await api
+    .post('/api/blogs')
+    .send(oneBlog)
+    .expect(400)
   })
 
   afterAll(() => {
