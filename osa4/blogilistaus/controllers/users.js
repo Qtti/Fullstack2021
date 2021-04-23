@@ -18,9 +18,17 @@ usersRouter.post('/', async (request, response) => {
     passwordHash,
   })
 
-  const savedUser = await user.save()
+  let savedUser;
+  try {
+    savedUser = await user.save()
+  }
+  catch(err) {
+    return response.status(400).json({ error: "user creation failed. Duplicate user?" })
+  }
+
 
   response.json(savedUser)
+  
 })
 
 usersRouter.get('/', async (request, response) => {

@@ -48,7 +48,7 @@ const initialList = [
 
   
 
-describe('total likes', () => {
+describe('Blogs', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(initialList)
@@ -150,7 +150,7 @@ describe('total likes', () => {
   
 })
 
-describe('when there is initially one user at db', () => {
+describe('User', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -213,29 +213,31 @@ describe('when there is initially one user at db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
   })
-})
 
-test('creation fails with duplicate users', async () => {
-  let response = await api.get('/api/users')
-  const usersAtStart = response.body
-  const newUser = {
-    username: 'jukkak',
-    name: 'jukka',
-    password: 'snsdasda',
-  }
-
-  await api
+  test('creation fails with duplicate users', async () => {
+    let response = await api.get('/api/users')
+    const usersAtStart = response.body
+    const newUser = {
+      username: 'jukkak',
+      name: 'jukka',
+      password: 'snsdasda',
+    }
+  
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  
+    await api
     .post('/api/users')
     .send(newUser)
-    .expect(200)
+    .expect(400)
     .expect('Content-Type', /application\/json/)
-
-  await api
-  .post('/api/users')
-  .send(newUser)
-  .expect(400)
-  .expect('Content-Type', /application\/json/)
+  })
 })
+
+
 
 afterAll(() => {
   mongoose.connection.close()
