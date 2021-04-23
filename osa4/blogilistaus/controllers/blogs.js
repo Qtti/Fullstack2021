@@ -3,6 +3,7 @@ const Blog = require('../models/blog')
 
 blogsRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
+                .populate('user')
   if (blog) {
     response.json(blog.toJSON())
   } else {
@@ -12,6 +13,7 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
+                  .populate('user')
   response.json(blogs)
 })
   
