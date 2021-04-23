@@ -182,6 +182,59 @@ describe('when there is initially one user at db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
   })
+
+  test('creation fails with too short password', async () => {
+    let response = await api.get('/api/users')
+    const usersAtStart = response.body
+    const newUser = {
+      username: 'jukkak',
+      name: 'jukka',
+      password: 'sn',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('creation fails without password', async () => {
+    let response = await api.get('/api/users')
+    const usersAtStart = response.body
+    const newUser = {
+      username: 'jukkak',
+      name: 'jukka'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+})
+
+test('creation fails with duplicate users', async () => {
+  let response = await api.get('/api/users')
+  const usersAtStart = response.body
+  const newUser = {
+    username: 'jukkak',
+    name: 'jukka',
+    password: 'snsdasda',
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  await api
+  .post('/api/users')
+  .send(newUser)
+  .expect(400)
+  .expect('Content-Type', /application\/json/)
 })
 
 afterAll(() => {
