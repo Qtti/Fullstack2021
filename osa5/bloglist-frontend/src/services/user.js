@@ -7,4 +7,9 @@ const login = (username, password) => {
     return request.then(response => response.data)
 }
 
-export default { login }
+const logout = () => {
+    window.localStorage.clear()
+}
+
+
+export default { login, logout }
