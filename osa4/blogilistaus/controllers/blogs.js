@@ -1,16 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-
-/*
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}*/
 
 blogsRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
@@ -33,19 +23,11 @@ blogsRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'title or url missing' })
   }
 
-  //const token = getTokenFrom(request)
-  try
-  {
-    const decodedToken = jwt.verify(response.token, process.env.SECRET)
-  }
-  catch
-  {
+  
+  if (!response.token || !response.decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
-  if (!response.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
+  const user = await User.findById(response.decodedToken.id)
 
   const blog = new Blog({
     title: request.body.title,
@@ -63,8 +45,20 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+  if (!response.token || !response.decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+  const blog = await Blog.findById(request.params.id)
+  const user = await User.findById(response.decodedToken.id)
+
+  if (blog && user && blog.user.toString() === user._id.toString() ){
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } else {
+    return response.status(401).json({ error: 'no permission for user' })
+  }
+  
+  
 })
 
 blogsRouter.put('/:id', (request, response, next) => {

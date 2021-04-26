@@ -1,3 +1,7 @@
+
+const config = require('../utils/config')
+const jwt = require('jsonwebtoken')
+
 const tokenExtractor = (request, response, next) => {
     
     const authorization = request.get('authorization')
@@ -5,7 +9,16 @@ const tokenExtractor = (request, response, next) => {
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
         response.token = authorization.substring(7)
     }
-    
+
+    try
+    {
+        response.decodedToken = jwt.verify(response.token, process.env.SECRET)
+    }
+    catch
+    {
+        response.decodedToken = false
+    }
+    console.log('dtoken:', response.decodedToken)
     console.log('token:', response.token)
     console.log('Method:', request.method)
     console.log('Path:  ', request.path)
