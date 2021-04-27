@@ -3,7 +3,7 @@ import blogService from '../services/blogs'
 
 
 
-const NewBlog = ({ updateBlogs }) => {
+const NewBlog = ({ updateBlogs, showNotification}) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
@@ -19,6 +19,7 @@ const NewBlog = ({ updateBlogs }) => {
           .create(blogObject)
           .then(returnedBlog => {
             updateBlogs()
+            showNotification("Created new Blog")
             
         })
         
