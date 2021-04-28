@@ -46,9 +46,9 @@ const App = () => {
 
   const userLogin = (event) => {
     event.preventDefault()
-    try{
-      user.login(username,password).then((user) => {
-        //console.log("data:", user)
+    user.login(username,password)
+      .then((user) => {
+      //console.log("data:", user)
 
         blogService.setToken(user.token)
         window.localStorage.setItem(
@@ -58,11 +58,12 @@ const App = () => {
         setUsername('')
         setPassword('')
         showNotification('User logged in')
+        updateBlogs()
       })
-    } catch(exception)
-    {
-      showNotification('wrong credentials')
-    }
+      .catch(() =>
+      {
+        showNotification('wrong credentials')
+      })
   }
 
   const userLogout = () => {
@@ -77,9 +78,9 @@ const App = () => {
         <Notification message={notificationMessage}/>
         <h2>Log in to application</h2>
         <form onSubmit={userLogin}>
-          Username: <input value={username} onChange={e => setUsername(e.target.value)}></input><br></br>
-          Password: <input value={password} onChange={e => setPassword(e.target.value)} type='password'></input><br></br>
-          <input type = 'submit'></input>
+          Username: <input id = 'username' value={username} onChange={e => setUsername(e.target.value)}></input><br></br>
+          Password: <input id = 'password' value={password} onChange={e => setPassword(e.target.value)} type='password'></input><br></br>
+          <input id='login-button' type = 'submit' value = 'Log in'></input>
         </form>
       </div>
     )
