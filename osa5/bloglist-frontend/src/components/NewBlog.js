@@ -32,14 +32,14 @@ const NewBlog = ({ updateBlogs, showNotification }) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={() => setVisible(!visible)}>Add blog</button>
+        <button id='showaddblog-button' onClick={() => setVisible(!visible)}>Add blog</button>
       </div>
       <div style={showWhenVisible}>
         <form onSubmit={addBlog}>
-          <span>title:</span> <input value={title} onChange={(e => setTitle(e.target.value))}></input><br></br>
-          <span>author:</span> <input value={author} onChange={(e => setAuthor(e.target.value))}></input><br></br>
-          <span>url:</span> <input value={url} onChange={(e => setUrl(e.target.value))}></input><br></br>
-          <input type="submit" value="Create"></input>
+          <span>title:</span> <input id='title-newblock' value={title} onChange={(e => setTitle(e.target.value))}></input><br></br>
+          <span>author:</span> <input id='author-newblock' value={author} onChange={(e => setAuthor(e.target.value))}></input><br></br>
+          <span>url:</span> <input id='url-newblock' value={url} onChange={(e => setUrl(e.target.value))}></input><br></br>
+          <input id='createblog-button' type="submit" value="Create"></input>
         </form>
         <button onClick={() => setVisible(false)}>Cancel</button>
       </div>
