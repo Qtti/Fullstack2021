@@ -54,6 +54,30 @@ describe('Blog ', function() {
 
             cy.contains('testtitle')
             cy.contains('testauthor')
+
+            
+        })
+
+        it('A blog can be liked', function() {
+            cy.get('#showaddblog-button').click()
+            cy.get('#title-newblock').type('testtitle')
+            cy.get('#author-newblock').type('testauthor')
+            cy.get('#url-newblock').type('url')
+            cy.get('#createblog-button').click()
+
+            cy.get('#setvisible-button').click()
+            cy.get('#addonelike-button').click()
+        })
+
+        it('A blog can be deleted', function() {
+            cy.get('#showaddblog-button').click()
+            cy.get('#title-newblock').type('testtitle')
+            cy.get('#author-newblock').type('testauthor')
+            cy.get('#url-newblock').type('url')
+            cy.get('#createblog-button').click()
+
+            cy.get('#setvisible-button').click()
+            cy.get('#removeblog-button').click()
         })
     })
 })
