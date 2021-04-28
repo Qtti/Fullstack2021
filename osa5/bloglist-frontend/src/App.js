@@ -27,21 +27,21 @@ const App = () => {
 
   const updateBlogs = () => {
     blogService.getAll().then(blogs =>
-      {
-        blogs.sort(function(a, b) {
-          return a.likes - b.likes;
-        })
-        blogs.reverse()
-        setBlogs( blogs )
-      }
-    )  
+    {
+      blogs.sort(function(a, b) {
+        return a.likes - b.likes
+      })
+      blogs.reverse()
+      setBlogs( blogs )
+    }
+    )
   }
 
   const showNotification = (message) => {
     setNotificationMessage(message)
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 5000)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   const userLogin = (event) => {
@@ -49,26 +49,26 @@ const App = () => {
     try{
       user.login(username,password).then((user) => {
         //console.log("data:", user)
-        
+
         blogService.setToken(user.token)
         window.localStorage.setItem(
           'loggedBlogappUser', JSON.stringify(user)
-        ) 
+        )
         setLoggeduser(user)
         setUsername('')
         setPassword('')
-        showNotification("User logged in")
+        showNotification('User logged in')
       })
     } catch(exception)
     {
-      showNotification("wrong credentials")
+      showNotification('wrong credentials')
     }
   }
 
   const userLogout = () => {
     setLoggeduser(null)
     user.logout()
-    showNotification("User logged out")
+    showNotification('User logged out')
   }
 
   if (loggeduser === null) {

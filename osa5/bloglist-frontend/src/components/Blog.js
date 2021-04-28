@@ -1,46 +1,46 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({blog, updateBlogs, showNotification}) => {
+const Blog = ({ blog, updateBlogs, showNotification }) => {
   const [visible, setVisible] = useState(false)
 
-  const hideWhenVisible = { 
+  const hideWhenVisible = {
     display: visible ? 'none' : '',
-    border: "1px solid black",
-    marginTop: "5px",
-    marginBottom: "5px"
+    border: '1px solid black',
+    marginTop: '5px',
+    marginBottom: '5px'
   }
-  const showWhenVisible = { 
+  const showWhenVisible = {
     display: visible ? '' : 'none',
-    border: "1px solid black",
-    marginTop: "5px",
-    marginBottom: "5px"
+    border: '1px solid black',
+    marginTop: '5px',
+    marginBottom: '5px'
   }
 
   const addOneLike = (blogObject) => {
     console.log(blogObject)
     blogObject.likes = blogObject.likes + 1
     //event.preventDefault()
-    console.log("update")
-    
+    console.log('update')
+
     blogService
       .update(blogObject)
-      .then(returnedBlog => {
+      .then(() => {
         updateBlogs()
-        showNotification("Updated new Blog")
-    })
+        showNotification('Updated new Blog')
+      })
   }
 
   const removeBlog = (blog) => {
     console.log(blog.id)
-    console.log("delete")
+    console.log('delete')
     if (window.confirm(`Do you really want to remove blog ${blog.title}?`)) {
       blogService
         .remove(blog.id)
-        .then(returnedBlog => {
+        .then(() => {
           updateBlogs()
-          showNotification("Updated new Blog")
-      })
+          showNotification('Updated new Blog')
+        })
     }
   }
 
@@ -58,7 +58,7 @@ const Blog = ({blog, updateBlogs, showNotification}) => {
         <button onClick={() => removeBlog(blog)}>Remove</button><br></br>
         <button onClick={() => setVisible(false)}>Hide</button>
       </div>
-    </div>  
-)}
+    </div>
+  )}
 
 export default Blog
