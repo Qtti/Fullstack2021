@@ -1,11 +1,28 @@
-const initialState = "Test notification"
+const initialState = ""
 
-const reducer = (state = initialState, action) => {
+export const showNotification = (content) => {
+    console.log("Show", content)
+    return {
+        type: 'SHOW',
+        data: content
+    }
+}
+
+export const hideNotification = () => {
+    console.log("Hide")
+    return {
+        type: 'HIDE',
+        data: ""
+    }
+}
+const notificationReducer = (state = initialState, action) => {
     switch(action.type) {
         case 'SHOW':
-            return state
+            return action.data
+        case 'HIDE':
+            return initialState
         default:
             return state
     }
 }
-export default reducer
+export default notificationReducer
