@@ -18,6 +18,7 @@ const asObject = (anecdote) => {
 }
 
 export const createAnecdote = (content) => {
+  console.log("create", content)
   return {
     type: 'NEW_ANECDOTE',
     data: {
