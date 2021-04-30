@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, useParams
+  Switch, Route, Link, useParams, useHistory
 } from "react-router-dom"
 
 const Menu = () => {
@@ -16,6 +16,8 @@ const Menu = () => {
     </div>
   )
 }
+
+
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -40,6 +42,8 @@ const Anecdote = ({ anecdotes }) => {
         <h2>Anecdote</h2>
         <ul>
           <li key={anecdote.id} >{anecdote.content}</li>
+          <li>{anecdote.author}</li>
+          <li>{anecdote.info}</li>
         </ul>
       </div>
     )
@@ -79,7 +83,10 @@ const Footer = () => (
   </div>
 )
 
+
 const CreateNew = (props) => {
+  const history = useHistory()
+
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -93,6 +100,8 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+
+    history.push('/anecdotes')
   }
 
   return (
@@ -118,7 +127,17 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({notification}) => {
+  
+  return (
+    <div>
+        <span>{notification}</span>
+    </div>
+  )
+}
+
 const App = () => {
+  
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -141,6 +160,11 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+
+    setNotification("a new anecdote " + anecdote.content + " created")
+    setTimeout(() => {
+      setNotification("")
+    }, 5000)
   }
 
   const anecdoteById = (id) =>
@@ -160,6 +184,7 @@ const App = () => {
   return (
     <Router>
       <Menu />
+      <Notification notification={notification}/>
 
       <Switch>
         <Route path="/anecdotes/:id">
@@ -183,4 +208,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default App
