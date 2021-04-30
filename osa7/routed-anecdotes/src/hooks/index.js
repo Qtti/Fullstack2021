@@ -7,10 +7,19 @@ export const useField = (type) => {
     setValue(event.target.value)
   }
 
+  const onReset = (event) => {
+    setValue("")
+  }
+
   return {
     type,
     value,
-    onChange
+    onChange,
+    onReset
   }
 }
 
+// moduulissa voi olla monta nimettyä eksportia
+export const useResetField = () => {
+    // ...
+  }
