@@ -12,7 +12,7 @@ const getToken = () => {
   const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
   if (loggedUserJSON) {
     let user = JSON.parse(loggedUserJSON)
-    token = user.token
+    token = `bearer ${user.token}`
   }
 }
 
@@ -32,15 +32,16 @@ const create = async newObject => {
   return response.data
 }
 
-const remove = (blogid) => {
+const remove = async (blogid) => {
   getToken()
+  console.log('TOKEN', token)
 
   const config = {
     headers: { Authorization: token },
   }
 
-  const request = axios.delete(baseUrl + '/' + blogid,config)
-  return request.then(response => response.data)
+  const response = await axios.delete(baseUrl + '/' + blogid,config)
+  return response.data
 }
 
 const update = async newObject => {

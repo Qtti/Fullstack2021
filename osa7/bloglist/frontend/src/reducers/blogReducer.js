@@ -33,10 +33,17 @@ export const removeBlog = (blog) => {
   }
 }
 
-export const initializeBlogs = (blogs) => {
-  return {
-    type: 'INIT_BLOGS',
-    data: blogs,
+export const initializeBlogs = () => {
+  return async dispatch => {
+    const blogs = await blogService.getAll()
+    blogs.sort(function(a, b) {
+      return a.likes - b.likes
+    })
+    blogs.reverse()
+    dispatch({
+      type: 'INIT_BLOGS',
+      data: blogs
+    })
   }
 }
 

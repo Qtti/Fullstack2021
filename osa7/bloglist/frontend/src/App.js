@@ -1,65 +1,66 @@
 import React, { useEffect } from 'react'
-import BlogList from './components/Blog'
+import BlogList, { OneBlog } from './components/Blog'
 import Notification from './components/Notification'
 import NewBlog from './components/NewBlog'
 import Login from './components/Login'
-import blogService from './services/blogs'
+import Users from './components/Users'
 
+import { auth } from './reducers/userReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { auth, logout } from './reducers/userReducer'
-import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
+
+import {
+  BrowserRouter as Router,
+  Switch, Route, Redirect, Link
+} from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
 
-  useEffect(() => {
-    console.log('store', user.name)
-    dispatch(auth())
 
-    updateBlogs()
+  useEffect(() => {
+    dispatch(auth())
+    dispatch(initializeBlogs())
   }, [])
 
-  const updateBlogs = () => {
-    blogService.getAll().then(blogs =>
-    {
-      blogs.sort(function(a, b) {
-        return a.likes - b.likes
-      })
-      blogs.reverse()
-      dispatch(initializeBlogs(blogs))
-    }
-    )
-  }
+  const padding = { padding: 5 }
 
-  const userLogout = () => {
-    window.localStorage.clear()
-    dispatch(logout())
-    dispatch(setNotification('User logged out'))
-  }
-
-  if (user.name === null) {
-    return (
-      <div>
-        <Notification/>
-        <h2>Log in to application</h2>
-        <Login></Login>
-      </div>
-    )
-  }
 
   return (
-    <div>
-      <Notification/>
-      <h2>blogs</h2>
-      <p>{user.name} logged in <button onClick={userLogout}>Logout</button></p>
-      <NewBlog/>
-      <br></br>
-      <BlogList/>
+    <div className="container">
+      <Router>
+        <Notification/>
+        {user.username === null ?
+          <Redirect to='/login' /> :
+          <div>
+            <Link style={padding} to='/blogs'>Blogs</Link>
+            <Link style={padding} to='/users'>Users</Link>
+            <Login></Login>
+          </div>
+        }
+        <Switch>
+          <Route path='/login'>
+            {user.username === null ? <div></div>: <Redirect to='/blogs' />}
+            <Login></Login>
+          </Route>
+          <Route path='/blogs'>
+            <h2>Blogs</h2>
+            <NewBlog/>
+            <BlogList/>
+          </Route>
+          <Route path='/blog/:id'>
+            <h2>Blog</h2>
+            <OneBlog/>
+          </Route>
+          <Route path='/users'>
+            <h2>Users</h2>
+            <Users></Users>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   )
 }
-
 
 export default App
